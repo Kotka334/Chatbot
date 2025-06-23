@@ -538,9 +538,8 @@
                 请严格遵守以下规则：
                 1. 专注于用户提出的当前话题
                 2. 表达理解和共情
-                3. 通过提问引导用户深入探讨当前话题
-                4. 不要主动开启新话题
-                5. 回应简洁专注`;
+                3. 不要主动开启新话题
+                4. 回应简洁专注`;
                 
                 // 构建消息数组
                 const messages = [
@@ -558,9 +557,11 @@
                     body: JSON.stringify({
                         model: MODEL_NAME,
                         messages: messages,
-                        max_tokens: 350,
-                        temperature: 0.6,
-                        top_p: 0.8
+                        max_tokens=400,  # 增加token限制以适应更长的回复
+                        temperature=0.5,  # 稍高的温度以获得更自然的回复
+                        top_p=0.95,
+                        frequency_penalty=0.1,
+                        presence_penalty=0.5
                     })
                 });
                 
