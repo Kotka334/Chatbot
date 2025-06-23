@@ -557,11 +557,11 @@
                     body: JSON.stringify({
                         model: MODEL_NAME,
                         messages: messages,
-                        max_tokens=400,  # 增加token限制以适应更长的回复
-                        temperature=0.5,  # 稍高的温度以获得更自然的回复
-                        top_p=0.95,
-                        frequency_penalty=0.1,
-                        presence_penalty=0.5
+                        max_tokens: 400,  # 增加token限制以适应更长的回复
+                        temperature: 0.5,  # 稍高的温度以获得更自然的回复
+                        top_p: 0.95,
+                        frequency_penalty: 0.1,
+                        presence_penalty: 0.5
                     })
                 });
                 
