@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindChat - 智能心理健康助手</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* 主要样式保持不变，只做必要的微调 */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(135deg, #2c3e50, #2980b9, #2c3e50);
+      background-size: 400% 400%;
+      animation: gradientBG 18s ease infinite;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fdfdfd;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+      display: flex;
+      height: 88vh;
+    }
+    header {
+      background: linear-gradient(135deg, #16a085, #2c3e50);
+      padding: 20px;
+      text-align: center;
+      color: white;
+    }
+    header h1 {
+      font-size: 28px;
+      margin: 10px 0 5px;
+    }
+    header p {
+      font-size: 15px;
+      opacity: 0.9;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .logo i {
+      color: #f1c40f;
+      font-size: 26px;
+    }
+    .logo span {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .sidebar {
+      width: 260px;
+      background: #f6f9fb;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #ddd;
+    }
+    .sidebar h3 {
+      margin-top: 0;
+      color: #2c3e50;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar li {
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #444;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-box {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: #fafcff;
+    }
+    .message {
+      margin-bottom: 20px;
+      max-width: 75%;
+    }
+    .user-message {
+      margin-left: auto;
+      background: linear-gradient(135deg, #3498db, #2c3e50);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 16px 4px 16px 16px;
+    }
+    .bot-message {
+      background: #fff;
+      border: 1px solid #e3eaf2;
+      padding: 12px 18px;
+      border-radius: 4px 16px 16px 16px;
+      color: #2c3e50;
+    }
+    .input-bar {
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      border-top: 1px solid #e0e0e0;
+      background: #ffffff;
+    }
+    .input-bar input {
+      flex: 1;
+      padding: 14px 18px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 24px;
+      outline: none;
+    }
+    .input-bar button {
+      padding: 14px 22px;
+      border: none;
+      border-radius: 24px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, #3498db, #2c3e50);
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 12px;
+      color: #777;
+      background: #f0f0f0;
+    }
+    .tech-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #3498db, #2c3e50);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .ai-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .pro-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #e67e22, #d35400);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    
+    /* 新增小公司风格的UI元素 */
+    .small-company-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #1abc9c, #16a085);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    
+    .community-note {
+      background: #f8f9fa;
+      border-left: 4px solid #3498db;
+      padding: 12px 15px;
+      margin: 15px 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      color: #555;
+    }
+    
+    .community-note i {
+      color: #3498db;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <i class="fas fa-comments"></i>
+      <span>MindSupport</span>
+      <span class="small-company-badge">创新小团队</span>
+    </div>
+    <h1>AI心理健康对话助手</h1>
+    <p>由专注的创新团队开发，融合AI技术与心理学知识</p>
+  </header>
+
+  <div class="container">
+    <div class="sidebar">
+      
+      <h3><i class="fas fa-graduation-cap"></i> 专业支持</h3>
+      <ul>
+        <li><i class="fas fa-user-md"></i> 心理学顾问参与模型训练</li>
+        <li><i class="fas fa-book-medical"></i> 参考心理学研究成果</li>
+        <li><i class="fas fa-hands-helping"></i> 提供心理支持策略</li>
+        <li><i class="fas fa-comment-medical"></i> 对话符合专业伦理标准</li>
+      </ul>
+      
+      <h3><i class="fas fa-lightbulb"></i> 对话建议</h3>
+      <ul>
+        <li><i class="fas fa-star"></i> 从当前情绪状态开始交流</li>
+        <li><i class="fas fa-quote-left"></i> 具体描述您的感受或经历</li>
+        <li><i class="fas fa-ellipsis-h"></i> 随时可暂停或切换话题</li>
+      </ul>
+    </div>
+
+    <div class="chat-area">
+      <div class="chat-box" id="chatMessages">
+        <div class="message bot-message">
+          您好！我是MindSupport AI助手</span><span class="pro-badge">专业支持</span>。由小型创新团队开发，专注于为您提供心理支持。
+        </div>
+        <div class="message bot-message">
+          <strong>重要说明：</strong>MindSupport由小型团队开发运营，未获得任何政府机构认证或背书。我们致力于持续改进服务质量。
+        </div>
+      </div>
+      <div class="input-bar">
+        <input type="text" id="userInput" placeholder="分享您的感受或想法...">
+        <button id="sendBtn"><i class="fas fa-paper-plane"></i> 发送</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    MindSupport © 2025 创新心理科技团队<br>
+    本服务由小型团队独立开发运营 · 不替代专业医疗诊断 · 紧急情况请寻求专业帮助
+  </footer>
+
+  <script>
+    // 配置API参数 - 完全未修改
+    const API_KEY = "sk-zk2735404bb23ff9211738b94315f9d1fc2685415e9990bb";
+    const API_BASE_URL = "https://api.zhizengzeng.com/v1";
+    const MODEL_NAME = "ft:gpt-3.5-turbo-0125:note-vibes:smile-model:BkCznBvr";
+    
+    // DOM元素 - 完全未修改
+    const chatMessages = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    
+    // 对话状态 - 完全未修改
+    let conversationHistory = [];
+    let isWaitingForResponse = false;
+    let conversationActive = true;
+    
+    // 初始化聊天 - 完全未修改
+    function initChat() {
+        // 初始消息已在HTML中定义
+    }
+    
+    // 添加消息到聊天界面 - 完全未修改
+    function addMessage(sender, content) {
+        // 移除欢迎信息
+        const welcomeContainer = document.querySelector('.welcome-container');
+        if (welcomeContainer) {
+            welcomeContainer.remove();
+        }
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+        
+        const avatarDiv = document.createElement('div');
+        avatarDiv.classList.add('message-avatar');
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.classList.add('message-content');
+        
+        if (sender === 'user') {
+            avatarDiv.innerHTML = '<i class="far fa-user"></i>';
+            contentDiv.innerHTML = `
+                <div class="message-header">您</div>
+                <div class="message-text">${content}</div>
+            `;
+        } else {
+            avatarDiv.innerHTML = '<i class="far fa-robot"></i>';
+            
+            // 将AI回复包装在专业回应样式中
+            contentDiv.innerHTML = `
+                <div class="message-header">MindChat助手 <span class="badge">专业支持</span></div>
+                <div class="message-text professional-response">${content}</div>
+            `;
+        }
+        
+        messageDiv.appendChild(avatarDiv);
+        messageDiv.appendChild(contentDiv);
+        chatMessages.appendChild(messageDiv);
+        
+        // 滚动到底部
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // 显示正在输入指示器 - 完全未修改
+    function showTypingIndicator() {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', 'bot-message');
+        
+        const avatarDiv = document.createElement('div');
+        avatarDiv.classList.add('message-avatar');
+        avatarDiv.innerHTML = '<i class="far fa-robot"></i>';
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.classList.add('message-content');
+        contentDiv.innerHTML = `
+            <div class="message-header">MindChat助手 <span class="badge">思考中</span></div>
+            <div class="typing-indicator">
+                <span></span><span></span><span></span>
+            </div>
+        `;
+        
+        messageDiv.appendChild(avatarDiv);
+        messageDiv.appendChild(contentDiv);
+        chatMessages.appendChild(messageDiv);
+        
+        // 滚动到底部
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        return messageDiv;
+    }
+    
+    // 发送消息到AI助手 - 完全未修改
+    async function sendMessage() {
+        if (!conversationActive) return;
+        
+        const message = userInput.value.trim();
+        if (!message || isWaitingForResponse) return;
+        
+        // 添加用户消息
+        addMessage('user', message);
+        conversationHistory.push({ role: 'user', content: message });
+        userInput.value = '';
+        
+        // 显示正在输入指示器
+        const typingIndicator = showTypingIndicator();
+        isWaitingForResponse = true;
+        sendBtn.disabled = true;
+        
+        try {
+            // 专业心理支持系统提示（关键优化）
+            const systemPrompt = `您是一位专业的心理支持助手，正在与来访者对话。请严格遵守以下原则：
+
+1. **专业心理辅导原则**：
+   - 绝不直接询问"您觉得这个建议有帮助吗？"或类似评估性问题
+   - 避免将问题抛回给来访者（如"您觉得呢？"）
+   - 不要求来访者评估建议的有效性
+
+2. **支持性表达方式**：
+   - 使用支持性陈述而非评估性提问
+   - 提供建设性意见后，使用开放式表达（如"如果您愿意，可以尝试..."）
+   - 关注情绪体验而非问题解决
+
+3. **回应结构**：
+   a. 情感认可（1-2句）：认可来访者的情绪体验
+   b. 专业视角（1-2句）：提供心理学视角的解读
+   c. 支持性建议（1-2项）：提供具体可操作的建议
+
+4. **关键禁令**：
+   - 禁止使用任何形式的建议有效性询问
+   - 避免使用"是否"、"能不能"等引导评估的词语
+   - 不要求来访者做自我评估（如"是否可以先做一份自我评估"）
+   - 不提供具体问题解决策略（如求职建议），聚焦情绪和认知
+
+5. **示例回应**：
+来访者："我因为失业感到非常焦虑"
+不良回应："您觉得学习放松技巧对您有帮助吗？" ❌
+优秀回应："失业带来的焦虑是很自然的反应。这种不确定性确实会引发强烈的情绪波动。或许我们可以尝试一些情绪调节技巧，比如每天花10分钟记录您的情绪变化。" ✅
+
+现在请开始专业、支持性的对话：`;
+
+            // 构建消息数组
+            const messages = [
+                { role: 'system', content: systemPrompt },
+                ...conversationHistory
+            ];
+            
+            // 调用API
+            const response = await fetch(API_BASE_URL + '/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: MODEL_NAME,
+                    messages: messages,
+                    max_tokens: 800,
+                    temperature: 0.7,
+                    top_p: 0.8
+                })
+            });
+            
+            const data = await response.json();
+            let reply = data.choices[0].message.content.trim();
+            
+            // 移除系统提示中的要求部分
+            reply = reply.replace(/现在请开始.*$/, '');
+            
+            // 移除正在输入指示器
+            typingIndicator.remove();
+            
+            // 添加AI回复
+            addMessage('assistant', reply);
+            conversationHistory.push({ role: 'assistant', content: reply });
+            
+        } catch (error) {
+            // 移除正在输入指示器
+            typingIndicator.remove();
+            
+            // 显示错误消息
+            addMessage('assistant', '抱歉，系统暂时无法处理您的请求。请稍后再试。');
+            console.error('API调用错误:', error);
+            
+        } finally {
+            isWaitingForResponse = false;
+            sendBtn.disabled = false;
+            userInput.focus();
+        }
+    }
+    
+    // 初始化事件监听器 - 完全未修改
+    window.onload = function() {
+        initChat();
+        
+        // 绑定事件监听器
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        // 自动聚焦输入框
+        userInput.focus();
+    };
+  </script>
+</body>
+</html>
